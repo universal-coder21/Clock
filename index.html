@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform lg:translate-x-0">
+            <div class="p-5 text-xl font-bold border-b">Dashboard</div>
+            <nav class="p-4">
+                <a href="#" class="block p-3 rounded-lg hover:bg-gray-200">Link 1</a>
+                <a href="#" class="block p-3 rounded-lg hover:bg-gray-200">Link 2</a>
+<!--                 <a href="#" class="block p-3 rounded-lg hover:bg-gray-200">Link 3</a>
+                <a href="#" class="block p-3 rounded-lg hover:bg-gray-200">Link 4</a>
+                <a href="#" class="block p-3 rounded-lg hover:bg-gray-200">Link 5</a> -->
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex flex-1 flex-col">
+            <!-- Navbar -->
+            <header class="flex items-center justify-between p-5 bg-white shadow-md">
+                <button id="menu-btn" class="lg:hidden">
+                    <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+                <h1 class="text-xl font-bold">Dashboard</h1>
+            </header>
+            
+            <!-- Content Area -->
+            <main class="p-6">
+                <div class="p-6 bg-white shadow-md rounded-lg">Welcome to the Dashboard!</div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+    </script>
+</body>
+</html>
