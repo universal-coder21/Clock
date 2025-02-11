@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Indian Clock</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(45deg, #1a1a1a, #2c3e50);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .clock-section {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .digital-clock {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+
+        .time {
+            font-size: 4rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .date {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            color: #ecf0f1;
+        }
+
+        .analog-clock {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border: 10px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+
+        .analog-clock .number {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transform: rotate(var(--rotation));
+            font-size: 1.5rem;
+            padding: 10px;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            background: white;
+            border-radius: 5px;
+            transform: translateX(-50%) rotate(var(--rotation));
+        }
+
+        .hour-hand {
+            width: 8px;
+            height: 30%;
+            background: #ff6b6b;
+        }
+
+        .minute-hand {
+            width: 6px;
+            height: 35%;
+            background: #4ecdc4;
+        }
+
+        .second-hand {
+            width: 4px;
+            height: 40%;
+            background: #ffbe76;
+        }
+
+        .center-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 15px;
+            height: 15px;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .additional-info {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .info-card i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .clock-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .time {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="clock-section">
+            <div class="digital-clock">
+                <div class="time" id="time">00:00:00</div>
+                <div class="date" id="date">Loading...</div>
+                <div id="timezone">Indian Standard Time (UTC+5:30)</div>
+            </div>
+            <div class="analog-clock" id="analog-clock">
+                <div class="hand hour-hand" id="hour-hand"></div>
+                <div class="hand minute-hand" id="minute-hand"></div>
+                <div class="hand second-hand" id="second-hand"></div>
+                <div class="center-dot"></div>
+                <!-- Clock numbers will be added by JavaScript -->
+            </div>
+        </div>
+        <div class="additional-info">
+            <div class="info-card">
+                <i class="fas fa-sun"></i>
+                <div id="day-phase">Day/Night</div>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-calendar-week"></i>
+                <div id="week-info">Week of Year</div>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-hourglass-half"></i>
+                <div id="day-progress">Day Progress</div>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-globe-asia"></i>
+                <div id="city-time">Major Cities</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add clock numbers
+        const analogClock = document.getElementById('analog-clock');
+        for (let i = 1; i <= 12; i++) {
+            const number = document.createElement('div');
+            number.className = 'number';
+            number.style.setProperty('--rotation', `${i * 30}deg`);
+            number.textContent = i;
+            analogClock.appendChild(number);
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const indiaTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+            
+            // Update digital clock
+            const timeString = indiaTime.toLocaleTimeString('en-US', { 
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('time').textContent = timeString;
+
+            // Update date
+            const dateString = indiaTime.toLocaleDateString('en-IN', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('date').textContent = dateString;
+
+            // Update analog clock hands
+            const hours = indiaTime.getHours() % 12;
+            const minutes = indiaTime.getMinutes();
+            const seconds = indiaTime.getSeconds();
+
+            const hourDeg = (hours * 30) + (minutes * 0.5);
+            const minuteDeg = minutes * 6;
+            const secondDeg = seconds * 6;
+
+            document.getElementById('hour-hand').style.setProperty('--rotation', `${hourDeg}deg`);
+            document.getElementById('minute-hand').style.setProperty('--rotation', `${minuteDeg}deg`);
+            document.getElementById('second-hand').style.setProperty('--rotation', `${secondDeg}deg`);
+
+            // Update day/night phase
+            const hour = indiaTime.getHours();
+            let phase = '';
+            if (hour >= 5 && hour < 12) phase = '🌅 Morning';
+            else if (hour >= 12 && hour < 17) phase = '☀️ Afternoon';
+            else if (hour >= 17 && hour < 20) phase = '🌅 Evening';
+            else phase = '🌙 Night';
+            document.getElementById('day-phase').textContent = phase;
+
+            // Update week information
+            const weekNumber = getWeekNumber(indiaTime);
+            document.getElementById('week-info').textContent = `Week ${weekNumber} of ${indiaTime.getFullYear()}`;
+
+            // Update day progress
+            const dayProgress = ((hour * 3600 + minutes * 60 + seconds) / 864) * 100;
+            document.getElementById('day-progress').textContent = `${dayProgress.toFixed(1)}% of day complete`;
+
+            // Update major cities time
+            const cities = [
+                { name: 'New York', timezone: 'America/New_York' },
+                { name: 'London', timezone: 'Europe/London' },
+                { name: 'Tokyo', timezone: 'Asia/Tokyo' }
+            ];
+            const cityTimes = cities.map(city => 
+                `${city.name}: ${new Date().toLocaleTimeString('en-US', { 
+                    timeZone: city.timezone,
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })}`
+            ).join('<br>');
+            document.getElementById('city-time').innerHTML = cityTimes;
+        }
+
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        // Update clock every second
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial update
+    </script>
+</body>
+</html>
